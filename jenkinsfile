@@ -13,19 +13,21 @@ pipeline {
             }
         }
  
-        stage('Build') {
+        stage('Build & Deploy') {
             steps {
                 sh '''
-                    sudo -i
-                    sudo apt update -y
-                    sudo apt install -y nginx
+                    # Update packages
+                    apt update -y
  
-                    # Start nginx
-                    sudo systemctl start nginx
-                    sudo systemctl enable nginx
+                    # Install nginx
+                    apt install -y nginx
  
-                    # Write message
-                    echo "Welcome! NGINX is successfully deployed via Jenkins." | sudo tee /var/www/html/index.html
+                    # Start nginx service
+                    systemctl start nginx
+                    systemctl enable nginx
+ 
+                    # Write welcome page
+                    echo "Welcome! NGINX is successfully deployed via Jenkins." > /var/www/html/index.html
                 '''
             }
         }
