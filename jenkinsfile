@@ -16,6 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
+                    sudo -i
                     sudo apt update -y
                     sudo apt install -y nginx
  
