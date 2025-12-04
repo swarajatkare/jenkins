@@ -1,33 +1,31 @@
 pipeline {
     agent any
-
+ 
+    triggers {
+        githubPush()
+    }
+ 
     stages {
-
-        stage('Checkout') {
+ 
+        stage('Pull code from GitHub') {
             steps {
-                echo "Pulling code from GitHub..."
-                git url: 'https://github.com/swarajatkare/jenkins.git', branch: 'main'
+                git branch: 'main', url: 'https://github.com/swarajatkare/jenkins.git'
             }
         }
-
+ 
         stage('Build') {
             steps {
-                echo "Running build step..."
-                sh 'echo Building application...'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo "Running tests..."
-                sh 'echo Tests executed!' 
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo "Deploying application..."
-                sh 'echo App deployed successfully thank you!!!!!!!!!!!!!!!'
+                sh '''
+                    sudo apt update -y
+                    sudo apt install -y nginx
+ 
+                    # Start nginx
+                    sudo systemctl start nginx
+                    sudo systemctl enable nginx
+ 
+                    # Write message
+                    echo "Welcome! NGINX is successfully deployed via Jenkins." | sudo tee /var/www/html/index.html
+                '''
             }
         }
     }
